@@ -35,3 +35,12 @@ sprite7Block = 248 * 64
 		ldy #.y
 		sty vic + 2 * .index + 1
 }
+
+!macro checkColision {
+		LDA $D01E ;Read hardware sprite/sprite collision
+		STA 1026               
+        CMP #0 
+        BNE HIT
+        JMP MAINLOOP
+HIT     INC $D020 
+}

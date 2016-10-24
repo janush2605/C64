@@ -1,6 +1,7 @@
 !source "loader.asm"
 !source "spriteUtils.asm"
 !source "vicUtils.asm"
+!source "joystickUtils.asm"
 
 +start_at 32768
 
@@ -70,8 +71,7 @@ BLINK DEC COUNT
          LDY dy
          STY 1025
          JMP MOVESPRITEBYJOY
-COLISION JMP CHECKCOLISION
-
+COLISION +checkColision
 MAINLOOP  JMP IRQROUT
 EXIT    RTS
 
@@ -86,7 +86,7 @@ JOYRIGHT        CPX #01
 JOYRUP          CPY #$FF
                 BEQ MOVESPRITE2UP
 JOYDOWN         CPY #$01
-                BEQ MOVESPRITE2DOWN               
+				BEQ MOVESPRITE2DOWN               
                 JMP COLISION
                 
 MOVESPRITE2LEFT         DEC SPRITE0X
@@ -171,18 +171,8 @@ MOVESPRITE2DOWNKEY      INC SPRITE2Y
                         JMP MAINLOOP
 
 ; =====================================================
-; SPRITES COLISIONS
+; SPRITES REPOSITORY
 ; =====================================================
-CHECKCOLISION   LDA $D01E ;Read hardware sprite/sprite collision
-                STA 1026               
-                CMP #0 
-                BNE HIT
-                JMP MAINLOOP
-HIT             INC $D020 
-                JMP MAINLOOP
-                
-; sprite repository
-
 planeToRight !byte 0,0,0,0,16,0,0,16
  !byte 0,0,16,0,0,56,0,1
  !byte 125,0,1,255,0,9,255,64
